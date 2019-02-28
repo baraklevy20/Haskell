@@ -23,9 +23,9 @@ splitOpcode n =
 
 
 twoWords4toWord8 :: Word8 -> Word8 -> Word8
-twoWords4toWord8 w1 w2 = (shift (fromIntegral $ w1) 8) .|. (fromIntegral w2)
+twoWords4toWord8 w1 w2 = (shift (fromIntegral $ w1) 4) .|. (fromIntegral w2)
 
-threeWords4toWord8 :: Word8 -> Word8 -> Word8 -> Word8
-threeWords4toWord8 w1 w2 w3 = (shift (fromIntegral $ w1) 16) .|.
-                             (shift (fromIntegral $ w2) 8) .|.
+threeWords4toWord16 :: Word8 -> Word8 -> Word8 -> Word16
+threeWords4toWord16 w1 w2 w3 = (shift (fromIntegral $ w1) 8) .|.
+                             (shift (fromIntegral $ w2) 4) .|.
                              (fromIntegral w3)
