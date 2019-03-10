@@ -6,7 +6,6 @@ module Runtime.Run (main, runGame) where
 import           Data.Maybe (fromMaybe)
 import           Data.Monoid
 import qualified Data.Char as Char (toLower)
-import qualified System.Random as Rand
 import           Control.Concurrent (forkIO)
 import           Control.Concurrent.Chan
 import           Control.Monad          ((>=>), (<=<), when, void, forever)
@@ -54,15 +53,8 @@ defaultSettings :: Settings
 defaultSettings = Settings
   { setShowInstructions = False
   , setPlaySounds       = True
-  , setSpeed            = NormalSpeed
+  , setSpeed            = FastSpeed
   }
-
-speedMultiplier :: Speed -> Int
-speedMultiplier speed =
-  case speed of
-    SlowSpeed   -> 2
-    NormalSpeed -> 6
-    FastSpeed   -> 12
 
 -------------------
 -- Option Parser --
@@ -195,8 +187,8 @@ render (_, renderer) (settings, audioChan, cpu) = do
   MySDL.setBGColor (Linear.V4 0 0 0 255) renderer
   drawRects (Lens.view CPU.graphics cpu) renderer
   SDL.present renderer
-  --when (setPlaySounds settings && Lens.view CPU.soundTimer cpu > 0) $
-    --writeChan audioChan (Lens.view CPU.soundTimer cpu)
+  when (setPlaySounds settings && Lens.view CPU.soundTimer cpu > 0) $
+    writeChan audioChan (Lens.view CPU.soundTimer cpu)
   when (setShowInstructions settings) $
         putStr (Bits.showHex16 $ fromIntegral (CPU.getPC cpu))
 
